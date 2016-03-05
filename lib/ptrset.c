@@ -1,6 +1,6 @@
 #include <ptrset.h>
 
-uint64_t ptr_bins[NBINS][NSLOT+1] = {0};
+static uint64_t ptr_bins[NBINS][NSLOT+1] = {0};
 
 /* Macros */
 
@@ -64,15 +64,7 @@ uint32_t
 ptrset_test_or_insert(uint64_t addr) {
     uint64_t *bin = ptr_bins[hash(addr)];
     int idx = 0;
-    /*while(bin[idx] != 0) {*/
-        /*if(bin[idx] == mask(addr)) return 0;*/
-        /*if(idx == NSLOT) {*/
-            /*bin = INT_TO_PTR(bin[idx]);*/
-            /*idx = 0;*/
-        /*} else {*/
-            /*idx++;*/
-        /*}*/
-    /*} */
+
     if(test_helper(bin, &idx, addr) == 0)
         return 0;
 
@@ -91,7 +83,6 @@ ptrset_test_or_insert(uint64_t addr) {
 void
 ptrset_dump() {
 #ifndef NDEBUG
-    /* FIXME : Off by one? */
     for(int i = 0; i < NBINS; i++) {
         uint64_t *bin = ptr_bins[i];
         printf("[%d] ", i);
