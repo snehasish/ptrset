@@ -65,7 +65,7 @@ int main() {
     cout << "time: "<< chrono::duration <double, milli> (end-start).count() << " ms" << endl;
 
     cout << "std::unordered_set \n";
-    auto hash = [](const uint64_t val) {
+    auto hash = [](const uint64_t val) -> uint64_t {
         return ((val >> 4) * 2654435761);
     };
 
