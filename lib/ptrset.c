@@ -29,6 +29,9 @@ unmask(uint64_t val) {
 static void 
 clear_alloc(uint64_t* bin) {
     if(bin[NSLOT] == 0) {
+#ifndef NDEBUG
+        printf("FREE: %p\n", (void *)bin);
+#endif
         free(bin);
     } else {
         clear_alloc(INT_TO_PTR(bin[NSLOT]));
@@ -36,7 +39,8 @@ clear_alloc(uint64_t* bin) {
 }
 
 static inline uint32_t 
-test_helper(uint64_t* bin, int *idx, uint64_t addr) {
+test_helper(uint64_t** pbin, int *idx, uint64_t addr) {
+    uint64_t *bin = *pbin;
     while(bin[*idx] != 0) {
         if(bin[*idx] == mask(addr)) return 0;
         if(*idx == NSLOT) {
@@ -46,6 +50,7 @@ test_helper(uint64_t* bin, int *idx, uint64_t addr) {
             (*idx)++;
         }
     } 
+    *pbin = bin;
     return 1;
 }
 
@@ -55,7 +60,7 @@ uint32_t
 ptrset_test(uint64_t addr) {
     uint64_t *bin = ptr_bins[hash(addr)];
     int idx = 0;
-    if(test_helper(bin, &idx, addr) == 0)
+    if(test_helper(&bin, &idx, addr) == 0)
         return 0;
     return 1;
 }
@@ -65,7 +70,7 @@ ptrset_test_or_insert(uint64_t addr) {
     uint64_t *bin = ptr_bins[hash(addr)];
     int idx = 0;
 
-    if(test_helper(bin, &idx, addr) == 0)
+    if(test_helper(&bin, &idx, addr) == 0)
         return 0;
 
     if(idx != NSLOT) {
@@ -76,6 +81,9 @@ ptrset_test_or_insert(uint64_t addr) {
         /* slow path calloc */
         bin[idx] = PTR_TO_INT(calloc(NSLOT + 1, sizeof(uint64_t)));
         *(INT_TO_PTR(bin[idx])) = mask(addr);
+#ifndef NDEBUG
+        printf("ALLOC: %p\n", (void *)bin[idx]);
+#endif
         return 2;
     }
 }

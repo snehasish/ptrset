@@ -1,2 +1,2 @@
 # ptrset
-Fast set data structure for pointers
+Set data structure for pointers

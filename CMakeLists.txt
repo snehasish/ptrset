@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(PtrSet)
 
-set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_C_FLAGS "-std=c11 -Werror -Wall")
 set(CMAKE_CXX_FLAGS "-std=c++11 -Werror -Wall")
 
