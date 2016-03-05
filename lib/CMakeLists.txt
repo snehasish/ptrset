@@ -1,1 +1,1 @@
-add_library(ptrset SHARED ptrset.c)
+add_library(ptrset STATIC ptrset.c)
