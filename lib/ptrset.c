@@ -28,14 +28,21 @@ unmask(uint64_t val) {
 
 static void 
 clear_alloc(uint64_t* bin) {
-    if(bin[NSLOT] == 0) {
-#ifndef NDEBUG
-        printf("FREE: %p\n", (void *)bin);
-#endif
-        free(bin);
-    } else {
+    if(bin[NSLOT] != 0) {
         clear_alloc(INT_TO_PTR(bin[NSLOT]));
     }
+
+    if(bin[NSLOT] == 0) {
+
+    }
+    /*if(bin[NSLOT] == 0) {*/
+/*#ifndef NDEBUG*/
+        /*printf("FREE: %p\n", (void *)bin);*/
+/*#endif*/
+        /*free(bin);*/
+    /*} else {*/
+        /*clear_alloc(INT_TO_PTR(bin[NSLOT]));*/
+    /*}*/
 }
 
 static inline uint32_t 
