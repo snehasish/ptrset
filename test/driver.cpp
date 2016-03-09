@@ -5,10 +5,10 @@
 #include <unordered_set>
 
 #ifdef NDEBUG
-#define NITEMS 256
+#define NITEMS 96
 #define NITERS 100000
 #else
-#define NITEMS 1024
+#define NITEMS 512
 #define NITERS 1
 #endif
 

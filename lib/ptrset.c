@@ -30,19 +30,11 @@ static void
 clear_alloc(uint64_t* bin) {
     if(bin[NSLOT] != 0) {
         clear_alloc(INT_TO_PTR(bin[NSLOT]));
+        free(INT_TO_PTR(bin[NSLOT]));
+#ifndef NDEBUG
+        printf("FREE: %p\n", (void *)bin[NSLOT]);
+#endif
     }
-
-    if(bin[NSLOT] == 0) {
-
-    }
-    /*if(bin[NSLOT] == 0) {*/
-/*#ifndef NDEBUG*/
-        /*printf("FREE: %p\n", (void *)bin);*/
-/*#endif*/
-        /*free(bin);*/
-    /*} else {*/
-        /*clear_alloc(INT_TO_PTR(bin[NSLOT]));*/
-    /*}*/
 }
 
 static inline uint32_t 
@@ -124,6 +116,10 @@ ptrset_clear_safe() {
         uint64_t *bin = ptr_bins[i];
         if(bin[NSLOT] != 0) {
             clear_alloc(INT_TO_PTR(bin[NSLOT]));
+            free(INT_TO_PTR(bin[NSLOT]));
+#ifndef NDEBUG
+        printf("FREE: %p\n", (void *)bin[NSLOT]);
+#endif
         }
     }
     ptrset_clear_unsafe();
