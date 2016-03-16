@@ -12,6 +12,9 @@ ptrset_test(uint64_t addr);
 uint32_t
 ptrset_test_or_insert(uint64_t);
 
+uint32_t
+ptrset_erase(uint64_t addr);
+
 void
 ptrset_dump();
 

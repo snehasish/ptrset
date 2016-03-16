@@ -26,6 +26,11 @@ unmask(uint64_t val) {
     return UNSET_BIT(val, 63);
 }
 
+static inline uint64_t
+tombstone() {
+    return mask(0);
+}
+
 static void 
 clear_alloc(uint64_t* bin) {
     if(bin[NSLOT] != 0) {
@@ -87,6 +92,17 @@ ptrset_test_or_insert(uint64_t addr) {
     }
 }
 
+uint32_t
+ptrset_erase(uint64_t addr) {
+    uint64_t *bin = ptr_bins[hash(addr)];
+    int idx = 0;
+    if(test_helper(&bin, &idx, addr) == 0) {
+        bin[idx] = tombstone();
+        return 0;
+    }
+    return 1;
+}
+
 void
 ptrset_dump() {
 #ifndef NDEBUG
@@ -118,7 +134,7 @@ ptrset_clear_safe() {
             clear_alloc(INT_TO_PTR(bin[NSLOT]));
             free(INT_TO_PTR(bin[NSLOT]));
 #ifndef NDEBUG
-        printf("FREE: %p\n", (void *)bin[NSLOT]);
+            printf("FREE: %p\n", (void *)bin[NSLOT]);
 #endif
         }
     }
